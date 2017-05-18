@@ -1,0 +1,31 @@
+server:
+  port: 8090
+
+spring:
+
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://176.17.131.225:3306/ctcf
+      username: root
+      password: root
+
+
+  mvc:
+    view:
+      prefix: /WEB-INF/pages/
+      suffix: .jsp
+      
+  http:
+    encoding:
+      force: true
+
+
+mybatis:
+  type-aliases-package: com.tedu.pojo
+  config-location: classpath:/mybatis/mybatis-config.xml
+  mapper-locations: classpath:/mybatis/mappers/*.xml
+
+
+
+
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tedu.mapper.CityCultureMapper">
+
+    <select id="findAll" resultMap="culturalRM">
+ 	    SELECT cultural_id,cultural_name,img_url,remark1,remark2,remark3,remark4,remark5,info.city_id,city_name,province_id,province_name
+ 	     FROM cultural_p c LEFT JOIN
+	    (SELECT city_id,city_name,p.province_id,province_name FROM city_p c LEFT JOIN province_p p
+	    ON c.province_id=p.province_id) info
+		ON c.city_id=info.city_id
+    </select>
+
+    <resultMap id="culturalRM" type="Cultural" autoMapping="true">
+        <id column="cultural_id" property="culturalId"/>
+        <association property="city" javaType="City">
+            <id column="city_id" property="cityId"/>
+            <result column="city_name" property="cityName"/>
+            <association property="province" javaType="Province">
+                <id column="province_id" property="provinceId"/>
+                <result column="province_name" property="provinceName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <insert id="saveCultural">
+        INSERT INTO cultural_p VALUES (#{culturalId}, #{city.cityId}, #{culturalName}, #{imgUrl},
+        #{remark1}, #{remark2}, #{remark3}, #{remark4}, #{remark5})
+    </insert>
+
+    <update id="updateCultural">
+        UPDATE cultural_p
+        <set>
+            <if test="city.cityId != null">cityId=#{city.cityId},</if>
+            <if test="culturalName != null">cultural_name=#{culturalName,}</if>
+            <if test="imgUrl != null">img_url=#{imgUrl},</if>
+            <if test="remark1 != null">remark1=#{remark1},</if>
+            <if test="remark2 != null">remark2=#{remark2},</if>
+            <if test="remark3 != null">remark3=#{remark3},</if>
+            <if test="remark4 != null">remark4=#{remark4},</if>
+            <if test="remark5 != null">remark5=#{remark5}</if>
+        </set>
+        WHERE cultural_id=#{culturalId}
+    </update>
+
+    <delete id="deleteCultural">
+        DELETE FROM cultural_p WHERE cultural_id=#{culturalId}
+    </delete>
+
+    <select id="findCulturalByCityId" resultMap="culturalRM">
+        SELECT cultural_id,cultural_name,img_url,remark1,remark2,remark3,remark4,remark5,info.city_id,city_name,province_id,province_name
+        FROM cultural_p c LEFT JOIN
+        (SELECT city_id,city_name,p.province_id,province_name FROM city_p c LEFT JOIN province_p p
+        ON c.province_id=p.province_id) info
+        ON c.city_id=info.city_id
+        WHERE WHERE c.city_id=#{city.cityId}
+    </select>
+
+    <select id="findCulturalById" resultMap="culturalRM">
+        SELECT cultural_id,cultural_name,img_url,remark1,remark2,remark3,remark4,remark5,info.city_id,city_name,province_id,province_name
+        FROM cultural_p c LEFT JOIN
+        (SELECT city_id,city_name,p.province_id,province_name FROM city_p c LEFT JOIN province_p p
+        ON c.province_id=p.province_id) info
+        ON c.city_id=info.city_id
+        WHERE cultural_id=#{culturalId}
+    </select>
+
+    <select id="findCulturalListByCityId" resultMap="culturalListRM">
+        select * from cultural_p
+        WHERE CITY_ID = #{cityId}
+    </select>
+
+    <resultMap id="culturalListRM" type="Cultural" autoMapping="true">
+        <id column="cultural_id" property="culturalId"/>
+    </resultMap>
+
+</mapper>

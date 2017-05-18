@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--用来唯一标识当前映射文件的id-->
+<mapper namespace="com.tedu.mapper.RoleMapper">
+
+	<!--<select id="findAll" resultType="Role">-->
+		<!--SELECT * FROM role_p-->
+	<!--</select>-->
+
+	<delete id="deleteRoles">
+		delete from role_p where role_id in(
+		<foreach collection="array" item="roleId" separator=",">
+			#{roleId}
+		</foreach>
+		)
+	</delete>
+
+	
+	<insert id="save">
+		INSERT into role_p
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="roleId != null">role_id,</if>
+				<if test="roleName != null">role_name,</if>
+				<if test="remark != null">remark,</if>
+				<if test="updateTime != null">update_time</if>
+			</trim>
+		VALUES
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="roleId != null">#{roleId},</if>
+				<if test="roleName != null">#{roleName},</if>
+				<if test="remark != null">#{remark},</if>
+				<if test="updateTime != null">#{updateTime}</if>
+			</trim>
+	</insert>
+
+	
+	<update id="update" parameterType="Role">
+		update role_p
+		<set>
+			role_name = #{roleName},
+			remark = #{remark},
+			update_time = #{updateTime}
+			<if test="createBy != null"> create_by = #{createBy}</if>
+		</set>
+		WHERE role_id = #{roleId}
+	</update>
+
+
+	<delete id="deleteRoleModuleByRoleIds">
+		delete from role_module_p where role_id in(
+			<foreach collection="array" item="roleId" separator=",">
+				#{roleId}
+			</foreach>
+		)
+	</delete>
+
+
+</mapper>
+

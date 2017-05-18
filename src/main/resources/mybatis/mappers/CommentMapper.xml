@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tedu.mapper.CommentMapper">
+
+    <select id="findCommentList" resultType="Comment">
+        SELECT COMMENT_ID,USER_ID,COMMENT_CONTENT,STATE,CREATE_TIME
+        FROM comment_p
+    </select>
+
+    <insert id="addComment">
+        INSERT INTO comment_p (comment_id,user_id,comment_content,create_time) VALUES (#{comment.commentId},#{comment.userId},#{comment.commentContent},#{comment.createTime})
+    </insert>
+
+</mapper>

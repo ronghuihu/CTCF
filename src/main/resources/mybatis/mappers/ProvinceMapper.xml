@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tedu.mapper.ProvinceMapper">
+
+    <select id="findAll" resultType="Province">
+        SELECT * FROM province_p
+    </select>
+
+    <insert id="saveProvince">
+        INSERT INTO province_p VALUES (#{provinceId}, #{provinceName},#{remark})
+    </insert>
+
+    <update id="updateProvince">
+        UPDATE province_p
+        <set>
+            <if test="provinceName != null">province_name=#{provinceName},</if>
+            <if test="remark != null">remark=#{remark}</if>
+        </set>
+        WHERE province_id=#{provinceId}
+    </update>
+
+    <delete id="deleteProvince">
+        DELETE FROM province_p where province_id=#{provinceId}
+    </delete>
+
+    <select id="findProvinceById" resultType="Province">
+        SELECT * FROM province_p  WHERE province_id=#{provinceId}
+    </select>
+</mapper>

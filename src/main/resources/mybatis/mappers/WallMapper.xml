@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--用来唯一标识当前映射文件的id-->
+<mapper namespace="com.tedu.mapper.WallMapper">
+
+	<insert id="saveWallContent">
+		INSERT INTO wall_p VALUES(
+		#{wallId},
+		#{wallContent},
+		#{user.userId},
+		#{state},
+		#{createTime,jdbcType=DATE},
+		#{updateTime,jdbcType=DATE}
+		)
+	</insert>
+
+	<select id="findAll" resultMap="WallRM">
+		SELECT * FROM
+		wall_p w
+		LEFT JOIN
+		(SELECT user_name u_name,user_id u_id FROM user_p)u
+		on
+		w.user_id = u.u_id
+		WHERE w.state=1
+	</select>
+
+	<resultMap id="WallRM" type="Wall" autoMapping="true">
+		<id column="wall_id" property="wallId"/>
+		<association property="user" javaType="User">
+			<id column="u_id" property="userId"/>
+			<result column="u_name" property="userName"/>
+		</association>
+	</resultMap>
+
+	<update id="updateMessage">
+		UPDATE wall_p
+		<set>
+			<if test="wallContent!=null">wall_content=#{wallContent},</if>
+			<if test="state!=null">state=#{state},</if>
+			<if test="updateTime!=null">update_time=#{updateTime}</if>
+		</set>
+		WHERE wall_id=#{wallId}
+	</update>
+
+	<select id="findMessageByuser" resultMap="WallRM">
+		SELECT * FROM
+		wall_p w
+		LEFT JOIN
+		(SELECT user_name u_name,user_id u_id FROM user_p)u
+		on
+		w.user_id = u.u_id
+		WHERE w.state=1 AND u_id=#{userId}
+	</select>
+</mapper>
+
